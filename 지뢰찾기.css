@@ -1,8 +1,15 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 #content {
     width: 540px;
     height: 480px;
     box-sizing: border-box;
     margin: 0 auto;
+    margin-top: 100px;
     padding: 0;
 }
 
@@ -11,6 +18,36 @@
     width: 540px;
     height: 60px;
     background-color: #4a752c;
+    padding: 0;
+}
+
+.score_board {
+    position: relative;
+}
+
+.score_board>div {
+    display: inline-block;
+    position: absolute;
+    height: 60px;
+}
+
+.score_board>div>* {
+    float: left;
+}
+
+.score_board>div>span {
+    margin-left: 10px;
+    font-size: 30px;
+    line-height: 60px;
+    color: aliceblue;
+}
+
+.timer {
+    left: 300px;
+}
+
+.left_flag {
+    left: 150px;
 }
 
 .game_board {

@@ -9,6 +9,7 @@
     6. 남은 지뢰 개수 표시
     7. 깃발 설치 기능
     8. 클릭에 애니메이션 기능 넣기
+    9. 난이도 선택 기능
 */
 
 class Minesweeper {
@@ -31,6 +32,12 @@ class Minesweeper {
         const $ScoreBoard = document.createElement("div");
         $ScoreBoard.classList.add("score_board");
 
+        const $LeftFlag = this.createLeftFlag();
+        $ScoreBoard.appendChild($LeftFlag);
+
+        const $Timer = this.createTimer();
+        $ScoreBoard.appendChild($Timer);
+
         return $ScoreBoard;
     }
 
@@ -39,6 +46,40 @@ class Minesweeper {
         $GameBoard.classList.add("game_board");
 
         return $GameBoard;
+    }
+
+    createLeftFlag() {
+        const $LeftFlag = document.createElement("div");
+        $LeftFlag.classList.add("left_flag");
+
+        const $FlagImg = document.createElement("img");
+        $FlagImg.src = './flag.png';
+
+        const $LeftFlagNumber = document.createElement("span");
+        $LeftFlagNumber.classList.add('left_flag_number');
+        $LeftFlagNumber.innerHTML = "40";
+
+        $LeftFlag.appendChild($FlagImg);
+        $LeftFlag.appendChild($LeftFlagNumber);
+
+        return $LeftFlag;
+    }
+
+    createTimer() {
+        const $Timer = document.createElement("div");
+        $Timer.classList.add("timer");
+
+        const $TimerImg = document.createElement("img");
+        $TimerImg.src = "./timer.png";
+
+        const $TimerNumber = document.createElement('span');
+        $TimerNumber.classList.add("timer_number");
+        $TimerNumber.innerHTML = 0;
+
+        $Timer.appendChild($TimerImg);
+        $Timer.appendChild($TimerNumber);
+
+        return $Timer;
     }
 
 }
