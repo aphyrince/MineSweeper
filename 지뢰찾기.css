@@ -1,0 +1,21 @@
+#content {
+    width: 540px;
+    height: 480px;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 0;
+}
+
+.score_board {
+    box-sizing: border-box;
+    width: 540px;
+    height: 60px;
+    background-color: #4a752c;
+}
+
+.game_board {
+    box-sizing: border-box;
+    width: 540px;
+    height: 420px;
+    background-color: rgb(117, 255, 36);
+}
