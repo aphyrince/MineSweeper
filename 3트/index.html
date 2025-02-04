@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>지뢰찾기</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+            text-align: center;
+            font-size: large;
+        }
+
+        #mineSweeper {
+            margin: 0 auto;
+            width: 500px;
+            height: 420px;
+        }
+
+        .header {
+            width: 100%;
+            height: 70px;
+            background-color: #4a752c;
+            position: relative;
+        }
+
+        .content {
+            width: 100%;
+            height: 350px;
+            background-color: rgb(117, 255, 36);
+        }
+
+        .cell {
+            width: 50px;
+            height: 50px;
+            box-sizing: border-box;
+            border: solid 1px gray;
+            float: left;
+            line-height: 50px;
+        }
+
+        .header>div,
+        #levelSelectorForm {
+            height: 70px;
+            text-align: left;
+            float: left;
+            color: white;
+        }
+
+        #levelSelector {
+            position: absolute;
+            left: 10px;
+        }
+
+        #flag {
+            position: absolute;
+            left: 120px;
+        }
+
+        #flag>* {
+            float: left;
+            line-height: 70px;
+            font-size: 40px;
+        }
+
+        #timer {
+            position: absolute;
+            left: 280px;
+        }
+
+        #timer>* {
+            float: left;
+            line-height: 70px;
+            font-size: 40px;
+        }
+
+        #timerN {
+            margin-left: 10px;
+        }
+
+        #sound {
+            position: absolute;
+            right: 20px;
+            float: left;
+            line-height: 70px;
+            font-size: 40px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="mineSweeper">
+        <header class="header container">
+            <div id="levelSelector">
+                <form id="levelSelectorForm" name="levelForm">
+                    <input type="radio" id="easy" name="levelSelector" value="easy" checked>
+                    <label for="easy">easy</label><br>
+                    <input type="radio" id="medium" name="levelSelector" value="medium">
+                    <label for="medium">medium</label><br>
+                    <input type="radio" id="hard" name="levelSelector" value="hard">
+                    <label for="hard">hard</label>
+                </form>
+            </div>
+            <div id="flag">
+                <img src="../flag.png">
+                <span id="flagN">80</span>
+            </div>
+            <div id="timer">
+                <img src="../timer.png">
+                <span id="timerN">0</span>
+            </div>
+            <div id="sound">
+                ♬
+            </div>
+        </header>
+        <div class="content container">
+        </div>
+    </div>
+    <script>
+        $content = document.querySelector('.content');
+        $levelSelector = document.querySelector('#levelSelectorForm');
+        $flag = document.querySelector('#flagN');
+        $timer = document.querySelector('#timerN');
+        $sound = document.querySelector('#sound');
+
+        const rowN = 7;
+        const colN = 10;
+
+        const cells = [];
+
+        for (let i = 0; i < rowN; i++) {
+            const rowCells = [];
+            for (let j = 0; j < colN; j++) {
+                const cell = {
+                    isOpen: false,
+                    isMine: (Math.round(Math.random() * 3) % 3 === 0),
+                    isFlag: false,
+                    nearMineN: 0,
+                    view: document.createElement('div'),
+                };
+                cell.view.info = cell;
+                cell.view.classList.add('cell');
+                cell.view.classList.add('not_open');
+                rowCells.push(cell);
+            }
+            cells.push(rowCells);
+        }
+
+        for (rowCells of cells) {
+            for (cell of rowCells) {
+                $content.appendChild(cell.view);
+            }
+        }
+
+        function cellClick({ target }) {
+            if (!target.matches('.content > .cell')) return;
+
+            if (target.info.isOpen) return;
+            else if (target.info.isFlag) return;
+            else if (target.info.isMine) {
+                clearInterval($timer.intervalId);
+                target.innerHTML = 'M';
+                for (rowCells of cells) {
+                    for (cell of rowCells) {
+                        if (cell.isMine) {
+                            cell.view.innerHTML = 'M';
+                        }
+                        else {
+                            cell.view.innerHTML = cell.nearMineN;
+                        }
+                    }
+                }
+            }
+            else {
+                target.innerHTML = target.info.nearMineN;
+            }
+        }
+
+        const dx = [-1, -1, -1, 0, 0, 1, 1, 1];
+        const dy = [-1, 0, 1, -1, 1, -1, 0, 1];
+
+        for (let i = 0; i < rowN; i++) {
+            for (let j = 0; j < colN; j++) {
+                if (cells[i][j].isMine) continue;
+
+                let nearMineN = 0;
+
+                for (let k = 0; k < 8; k++) {
+                    const x = j + dx[k];
+                    const y = i + dy[k];
+
+                    if (y < 0 || rowN <= y) continue;
+                    else if (x < 0 || colN <= x) continue;
+                    else if (cells[y][x].isMine) {
+                        nearMineN++;
+                    }
+                }
+
+                cells[i][j].nearMineN = nearMineN;
+            }
+        }
+
+        $content.onclick = cellClick;
+        $timer.intervalId = setInterval(() => { $timer.innerText = +$timer.innerText + 1 }, 1000);
+
+    </script>
+</body>
+
+</html>
